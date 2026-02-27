@@ -1,4 +1,8 @@
 package goltsman.bookingtableapp.exception;
 
-public class HttpErrorResponce {
+public record HttpErrorResponse(
+        int code,
+        String type,
+        String message
+) {
 }

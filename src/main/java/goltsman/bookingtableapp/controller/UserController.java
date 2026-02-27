@@ -1,4 +1,4 @@
-package goltsman.bookingtableapp.controllers;
+package goltsman.bookingtableapp.controller;
 
 import goltsman.bookingtableapp.common.ApiConstant;
 import goltsman.bookingtableapp.model.request.CreateUserRequest;

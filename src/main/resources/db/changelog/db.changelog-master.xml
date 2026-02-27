@@ -4,11 +4,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="0001" author="Goltsman Gleb">
+    <changeSet id="1.0.0" author="Goltsman Gleb">
         <sql>CREATE SCHEMA IF NOT EXISTS booking_service</sql>
     </changeSet>
 
-<!--    <include file="2026/02/2026-02-26_create_table.sql" author="Goltsman Gleb"-->
-<!--             relativeToChangelogFile="true"/>-->
+    <include file="2026/02/2026-02-26_create_user_role_table.sql" author="Goltsman Gleb"
+             relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -1,7 +1,7 @@
-package goltsman.bookingtableapp.controllers.impl;
+package goltsman.bookingtableapp.controller.impl;
 
 import goltsman.bookingtableapp.common.RoleConstant;
-import goltsman.bookingtableapp.controllers.UserController;
+import goltsman.bookingtableapp.controller.UserController;
 import goltsman.bookingtableapp.model.request.CreateUserRequest;
 import goltsman.bookingtableapp.model.responce.UserResponse;
 import goltsman.bookingtableapp.service.UserService;

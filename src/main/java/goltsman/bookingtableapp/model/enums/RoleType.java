@@ -1,6 +1,6 @@
 package goltsman.bookingtableapp.model.enums;
 
-public enum Role {
+public enum RoleType {
     ADMIN,
     CLIENT
 }

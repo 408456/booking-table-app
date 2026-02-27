@@ -1,4 +1,4 @@
 package goltsman.bookingtableapp.repository;
 
-public class ReviewRepository {
+public class UserRepository {
 }

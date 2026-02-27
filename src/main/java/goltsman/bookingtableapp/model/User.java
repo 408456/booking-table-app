@@ -1,4 +1,4 @@
 package goltsman.bookingtableapp.model;
 
-public class Review {
+public class User {
 }

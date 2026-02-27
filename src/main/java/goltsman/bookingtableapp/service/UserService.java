@@ -1,4 +1,4 @@
 package goltsman.bookingtableapp.service;
 
-public interface ReviewService {
+public class UserService {
 }

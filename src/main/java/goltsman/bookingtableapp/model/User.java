@@ -1,16 +1,12 @@
 package goltsman.bookingtableapp.model;
 
-import goltsman.bookingtableapp.model.enums.RoleType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,78 +14,73 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "role")
-    private RoleType role;
+    @Column(name = "first_name", nullable = false, length = 100)
+    private String firstName;
 
-    @Column(name = "username")
-    private String username;
-
-    @Column(name = "first_name")
-    private String first_name;
-
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
-    @Column(name = "phone")
+    @Column(name = "phone", nullable = false, unique = true, length = 20)
     private String phone;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "is_verified")
-    private Boolean isVerified;
+    @Column(name = "is_verified", nullable = false)
+    @Builder.Default
+    private Boolean isVerified = false;
 
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            schema = "booking_service",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<UserRole> userRoles = new ArrayList<>();
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (UserRole userRole : userRoles) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + userRole.getRole().getName().name()));
+        }
+        return authorities;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override
@@ -109,6 +100,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isVerified;
     }
 }

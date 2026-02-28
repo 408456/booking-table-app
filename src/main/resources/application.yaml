@@ -1,15 +1,29 @@
-spring:
-  application:
-    name: booking-table-app
-
 server:
   port: 9696
 
-jwt:
-  secret: mySuperSecretKeyForJwtTokenGenerationThatMustBeAtLeast32CharactersLong
-  expiration: 86400000
+spring:
+  config:
+    import: "optional:classpath:.env"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/booking-service
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
 
-logging:
-  level:
-    com.goltsman: DEBUG
-    org.springframework.web: INFO
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
+
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: ${JWT_EXPIRATION_MS}

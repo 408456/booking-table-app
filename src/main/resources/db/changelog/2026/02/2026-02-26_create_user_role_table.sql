@@ -3,14 +3,13 @@ CREATE TYPE role_type AS ENUM ('ADMIN', 'CLIENT');
 CREATE TABLE IF NOT EXISTS roles
 (
     id          BIGSERIAL PRIMARY KEY,
-    name        role_type NOT NULL UNIQUE,
+    name        VARCHAR(50) NOT NULL UNIQUE,
     description VARCHAR(200)
 );
 
 CREATE TABLE IF NOT EXISTS users
 (
     id          BIGSERIAL PRIMARY KEY,
-    username    VARCHAR(100) NOT NULL,
     first_name  VARCHAR(100) NOT NULL,
     last_name   VARCHAR(100) NOT NULL,
     phone       VARCHAR(20)  NOT NULL UNIQUE,

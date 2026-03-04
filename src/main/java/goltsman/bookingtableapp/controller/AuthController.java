@@ -1,8 +1,14 @@
 package goltsman.bookingtableapp.controller;
 
+import goltsman.bookingtableapp.controller.annotation.CommonApiResponses;
 import goltsman.bookingtableapp.model.dto.JwtAuthenticationDto;
-import goltsman.bookingtableapp.model.dto.RefreshTokenDto;
-import goltsman.bookingtableapp.model.dto.UserCredentialsDto;
+import goltsman.bookingtableapp.model.request.RefreshTokenRequest;
+import goltsman.bookingtableapp.model.request.UserCredentialsRequest;
+import goltsman.bookingtableapp.model.responce.JwtAuthenticationResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +23,29 @@ import static goltsman.bookingtableapp.common.ApiConstant.SIGN_IN_URL;
 
 @Validated
 @RequestMapping(BASE_AUTH_CONTROLLER_URL)
-@Tag(name = "Контроллер аунтификации",
-        description = "Этот контроллер позволяет пользователям авторизовываться в системе")
-
+@Tag(name = "Контроллер аунтификации", description = "Этот контроллер позволяет пользователям авторизовываться в системе")
 public interface AuthController {
 
+    @Operation(
+            summary = "Аунтификация пользователя",
+            description = "Аунтифицирует пользователя на основе email и пароля и возвращает его ответ",
+            responses = @ApiResponse(responseCode = "201", description = "Created",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = JwtAuthenticationResponse.class))))
+    @CommonApiResponses
     @PostMapping(SIGN_IN_URL)
-    public ResponseEntity<JwtAuthenticationDto> singIn(@Valid @RequestBody UserCredentialsDto userCredentialsDto);
+    ResponseEntity<JwtAuthenticationResponse> singIn(@Valid @RequestBody UserCredentialsRequest userCredentialsRequest);
 
+    @Operation(
+            summary = "Создание refresh токен пользователя",
+            description = "Создаёт refresh токен пользователя на основе входного запроса и возвращает его ответ",
+            responses = @ApiResponse(responseCode = "201", description = "Created",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = JwtAuthenticationResponse.class))))
+    @CommonApiResponses
     @PostMapping(REFRESH_URL)
-    public JwtAuthenticationDto refresh(@Valid @RequestBody RefreshTokenDto refreshTokenDto);
+    ResponseEntity<JwtAuthenticationResponse> refresh(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest);
+
 }

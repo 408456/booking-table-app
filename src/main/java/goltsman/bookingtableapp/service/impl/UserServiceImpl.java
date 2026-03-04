@@ -1,29 +1,26 @@
 package goltsman.bookingtableapp.service.impl;
 
-import goltsman.bookingtableapp.exception.ResourceAlreadyExistsException;
 import goltsman.bookingtableapp.mapper.UserMapper;
-import goltsman.bookingtableapp.model.Role;
 import goltsman.bookingtableapp.model.User;
-import goltsman.bookingtableapp.model.UserRole;
 import goltsman.bookingtableapp.model.dto.JwtAuthenticationDto;
 import goltsman.bookingtableapp.model.dto.RefreshTokenDto;
 import goltsman.bookingtableapp.model.dto.UserCredentialsDto;
 import goltsman.bookingtableapp.model.enums.RoleType;
 import goltsman.bookingtableapp.model.request.CreateUserRequest;
+import goltsman.bookingtableapp.model.request.UpdateUserProfileRequest;
 import goltsman.bookingtableapp.model.responce.UserResponse;
-import goltsman.bookingtableapp.repository.RoleRepository;
 import goltsman.bookingtableapp.repository.UserRepository;
+import goltsman.bookingtableapp.security.SecurityService;
 import goltsman.bookingtableapp.security.jwt.JwtService;
 import goltsman.bookingtableapp.service.UserService;
-import jakarta.transaction.Transactional;
+import goltsman.bookingtableapp.service.UserValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.naming.AuthenticationException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -31,59 +28,79 @@ import javax.naming.AuthenticationException;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final SecurityService securityService;
+    private final UserValidationService userValidationService;
 
+    @Override
     @Transactional
-    public UserResponse createUser(CreateUserRequest request) {
-        if (userRepository.existsByPhone(request.getPhone()) ||
-                userRepository.existsByEmail(request.getEmail())) {
-            throw new ResourceAlreadyExistsException("Пользователь с такими данными уже существует");
-        }
-        User user = userMapper.toUser(request);
+    public UserResponse create(CreateUserRequest request) {
+        log.info("Попытка создать пользователя с email {}", request.getEmail());
+
+        userValidationService.validateEmailForCreate(request.getEmail());
+        userValidationService.validatePhoneForCreate(request.getPhone());
+        User user = userMapper.mapCreateUserRequestToUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        RoleType roleType = RoleType.valueOf(request.getRole());
-        log.info("roleType={}", roleType);
-        Role role = roleRepository.findByName(roleType)
-                .orElseThrow(() -> new IllegalArgumentException("Роль не найдена: " + roleType));
-        UserRole userRole = UserRole.builder()
-                .user(user)
-                .role(role)
-                .build();
-        user.getUserRoles().add(userRole);
+        user.setRole(RoleType.valueOf(request.getRole()));
+        userRepository.save(user);
+        log.info("Пользователь успешно создан с id {}", user.getId());
+
+        return userMapper.mapUserToUserResponse(user);
+    }
+
+
+    @Override
+    @Transactional
+    public UserResponse updateProfile(UpdateUserProfileRequest request) {
+        User user = securityService.getCurrentUser();
+        log.info("Попытка обновить профиль пользователя с id {}", user.getId());
+
+        userValidationService.validateEmailForUpdate(request.getEmail(), user);
+        userValidationService.validatePhoneForUpdate(request.getPhone(), user);
+
+        userMapper.mapUpdateUserProfileRequestToUser(request, user);
+        if (userValidationService.isEmailChanged(request.getEmail(), user)) user.setIsVerified(false);
 
         userRepository.save(user);
-        return userMapper.toCreateUserResponse(user);
+        log.info("Профиль пользователя с id {} успешно обновлен", user.getId());
+        return userMapper.mapUserToUserResponse(user);
     }
 
-    @Override
-    public JwtAuthenticationDto singIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
-        User user = findByCredentials(userCredentialsDto); // используем приватный метод
-        return jwtService.generateAuthToken(user.getEmail());
-    }
 
-    @Override
-    public JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) throws Exception {
-        String refreshToken = refreshTokenDto.getRefreshToken();
-        if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
-            User user = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(user.getEmail(), refreshToken);
-        }
-        throw new AuthenticationException("Invalid refresh token");
-    }
-
-    private User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
-    }
-
-    private User findByCredentials(UserCredentialsDto dto) throws AuthenticationException {
-        User user = findByEmail(dto.getEmail());
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-            throw new AuthenticationException("Invalid credentials");
-        }
-        return user;
-    }
+//
+//    @Override
+//    @Transactional(readOnly = true)
+//    public UserResponse getById(Long id) {
+//        log.info("Попытка получить данные пользователя с id {}", id);
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id=" + id + " не найден"));
+//        return userMapper.mapUsertoCreateUserResponse(user);
+//    }
+//
+//
+//    @Transactional(readOnly = true)
+//    public UserListResponse getUsers(Pageable pageable) {
+//        log.info("Попытка получить список пользователей");
+//        Page<User> userPage = userRepository.findAll(pageable);
+//        List<UserResponse> users = userPage.getContent().stream()
+//                .map(userMapper::mapUsertoCreateUserResponse)
+//                .toList();
+//        return new UserListResponse(
+//                (int) userPage.getTotalElements(),
+//                pageable.getPageNumber() + 1,
+//                pageable.getPageSize(),
+//                pageable.getPageSize(),
+//                users
+//        );
+//    }
+//
+//
+//    @Override
+//    public UserResponse delete(Long id) {
+//        log.info("Попытка удалить пользователя с id {}", id);
+//
+//        return null;
+//    }
 }

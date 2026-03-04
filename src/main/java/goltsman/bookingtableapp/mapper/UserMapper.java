@@ -1,29 +1,23 @@
 package goltsman.bookingtableapp.mapper;
 
 import goltsman.bookingtableapp.model.User;
-import goltsman.bookingtableapp.model.enums.RoleType;
 import goltsman.bookingtableapp.model.request.CreateUserRequest;
+import goltsman.bookingtableapp.model.request.UpdateUserProfileRequest;
 import goltsman.bookingtableapp.model.responce.UserResponse;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mapping(target = "isVerified", constant = "false")
-    User toUser(CreateUserRequest request);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    User mapCreateUserRequestToUser(CreateUserRequest request);
 
-    @Mapping(target = "role", source = "user", qualifiedByName = "mapRole")
-    UserResponse toCreateUserResponse(User user);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void mapUpdateUserProfileRequestToUser(UpdateUserProfileRequest request,
+                                           @MappingTarget User user);
 
-    @Mapping(target = "role", source = "user", qualifiedByName = "mapRole")
-    UserResponse toUpdateUserResponse(User user);
-
-    @Named("mapRole")
-    default RoleType mapRole(User user) {
-        return user.getUserRoles().stream()
-                .findFirst()
-                .map(userRole -> userRole.getRole().getName())
-                .orElse(null);
-    }
+    UserResponse mapUserToUserResponse(User user);
 }

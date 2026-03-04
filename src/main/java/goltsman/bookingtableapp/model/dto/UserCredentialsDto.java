@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class UserCredentialsDto {
-    @Schema(description = "почта пользователя", example = "gleb@gmail.com")
+    @Schema(description = "почта пользователя", example = "admin@example.com")
     private String email;
-    @Schema(description = "пароль пользователя", example = "Pass123!")
+    @Schema(description = "пароль пользователя", example = "admin123")
     private String password;
 }

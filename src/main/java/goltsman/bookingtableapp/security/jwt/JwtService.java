@@ -1,92 +1,71 @@
 package goltsman.bookingtableapp.security.jwt;
 
-import goltsman.bookingtableapp.model.dto.JwtAuthenticationDto;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-@Component
+@Service
 public class JwtService {
 
-    private static final Logger LOGGER = LogManager.getLogger(JwtService.class);
-
-    @Value("404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
-    public JwtAuthenticationDto generateAuthToken(String email) {
-        JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
-        jwtDto.setToken(generateJwtToken(email));
-        jwtDto.setRefreshToken(generateRefreshToken(email));
-        return jwtDto;
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public JwtAuthenticationDto refreshBaseToken(String email, String refreshToken) {
-        JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
-        jwtDto.setToken(generateJwtToken(email));
-        jwtDto.setRefreshToken(refreshToken);
-        return jwtDto;
-    }
-
-    private String generateJwtToken(String email) {
-        Date expirationDate = Date.from(LocalDateTime.now()
+    public String generateAccessToken(Long userId) {
+        Date expiration = Date.from(LocalDateTime.now()
                 .plusMinutes(60)
                 .atZone(ZoneId.systemDefault())
                 .toInstant());
 
         return Jwts.builder()
-                .setSubject(email)             // <-- исправлено
-                .setExpiration(expirationDate)
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256) // <-- алгоритм явный
+                .setSubject(String.valueOf(userId))  // вместо email
+                .setExpiration(expiration)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private String generateRefreshToken(String email) {
-        Date expirationDate = Date.from(LocalDateTime.now()
+    public String generateRefreshToken(Long userId) {
+        Date expiration = Date.from(LocalDateTime.now()
                 .plusDays(1)
                 .atZone(ZoneId.systemDefault())
                 .toInstant());
 
         return Jwts.builder()
-                .setSubject(email)
-                .setExpiration(expirationDate)
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .setSubject(String.valueOf(userId))
+                .setExpiration(expiration)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private SecretKey getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    public String getEmailFromToken(String token) {
+    public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.getSubject();
+        return Long.parseLong(claims.getSubject());
     }
 
-    public boolean validateJwtToken(String token) {
+    public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSignInKey())
-                    .build()
-                    .parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            LOGGER.error("Invalid JWT token", e);
+            return false;
         }
-        return false;
     }
 }

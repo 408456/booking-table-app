@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -40,6 +40,7 @@ public class SecurityConfig {
                                         "/api-docs/**",
                                         "/webjars/**"
                                 ).permitAll()
+                                .requestMatchers("api/v1/users").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )

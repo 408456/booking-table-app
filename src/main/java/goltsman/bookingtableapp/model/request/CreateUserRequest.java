@@ -53,6 +53,5 @@ public class CreateUserRequest {
     private String password;
 
     @Schema(description = "роль пользователя", example = "ADMIN")
-    @NotBlank
     private String role;
 }

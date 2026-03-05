@@ -13,9 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
-
-import static goltsman.bookingtableapp.common.RoleConstant.ADMIN;
 
 @Slf4j
 @RestController
@@ -25,32 +24,32 @@ public class UserControllerImpl implements UserController {
     private final UserService userService;
 
     @Override
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> create(CreateUserRequest createUserRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(createUserRequest));
     }
 
 
     @Override
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> updateProfile(UpdateUserProfileRequest updateUserProfileRequest) {
         return ResponseEntity.ok(userService.updateProfile(updateUserProfileRequest));
     }
 
     @Override
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> getUser(Long id) {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
     @Override
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MessageResponse> delete(Long id) {
         return ResponseEntity.ok(userService.delete(id));
     }
 
     @Override
-    @Secured(ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserListResponse> getUsers(Integer page, Integer pageSize) {
         PageRequest pageable = PageRequest.of(Math.max(page - 1, 0), Math.max(pageSize, 1));
         return ResponseEntity.ok(userService.getUsers(pageable));

@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
         userMapper.mapUpdateUserProfileRequestToUser(request, user);
         if (userValidationService.isEmailChanged(request.getEmail(), user)) {
-            // TODO: отправка на почту кода подтверждения
+            // TODO: отправка на почту кода подтверждения если почта изменилась
             user.setIsVerified(false);
         }
 

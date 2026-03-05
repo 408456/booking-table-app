@@ -2,8 +2,10 @@ package goltsman.bookingtableapp.controller;
 
 import goltsman.bookingtableapp.controller.annotation.CommonApiResponses;
 import goltsman.bookingtableapp.model.request.RefreshTokenRequest;
-import goltsman.bookingtableapp.model.request.UserCredentialsRequest;
-import goltsman.bookingtableapp.model.responce.JwtAuthenticationResponse;
+import goltsman.bookingtableapp.model.request.SignUpRequest;
+import goltsman.bookingtableapp.model.request.SignInRequest;
+import goltsman.bookingtableapp.model.responce.JwtResponse;
+import goltsman.bookingtableapp.model.responce.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,15 +28,26 @@ import static goltsman.bookingtableapp.common.ApiConstant.SIGN_IN_URL;
 public interface AuthController {
 
     @Operation(
+            summary = "Регистрация пользователя",
+            description = "Регистрирует пользователя на основе входных данных и возвращает его ответ",
+            responses = @ApiResponse(responseCode = "201", description = "Created",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MessageResponse.class))))
+    @CommonApiResponses
+    @PostMapping("/sign-up")
+    ResponseEntity<MessageResponse> signUp(@Valid @RequestBody SignUpRequest request);
+
+    @Operation(
             summary = "Аунтификация пользователя",
             description = "Аунтифицирует пользователя на основе email и пароля и возвращает его ответ",
             responses = @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = JwtAuthenticationResponse.class))))
+                            schema = @Schema(implementation = JwtResponse.class))))
     @CommonApiResponses
     @PostMapping(SIGN_IN_URL)
-    ResponseEntity<JwtAuthenticationResponse> singIn(@Valid @RequestBody UserCredentialsRequest userCredentialsRequest);
+    ResponseEntity<JwtResponse> singIn(@Valid @RequestBody SignInRequest signInRequest);
 
     @Operation(
             summary = "Создание refresh токен пользователя",
@@ -42,9 +55,9 @@ public interface AuthController {
             responses = @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = JwtAuthenticationResponse.class))))
+                            schema = @Schema(implementation = JwtResponse.class))))
     @CommonApiResponses
     @PostMapping(REFRESH_URL)
-    ResponseEntity<JwtAuthenticationResponse> refresh(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest);
+    ResponseEntity<JwtResponse> refresh(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest);
 
 }

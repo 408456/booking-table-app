@@ -47,7 +47,8 @@ public class GlobalExceptionHandler {
             NumberFormatException.class,
             IllegalArgumentException.class,
             MissingPathVariableException.class,
-            ConstraintViolationException.class
+            ConstraintViolationException.class,
+            IllegalStateException.class
     })
     public ResponseEntity<HttpErrorResponse> handleBadRequest(Exception ex) {
         return buildErrorResponse(
@@ -68,23 +69,22 @@ public class GlobalExceptionHandler {
                 ex);
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<HttpErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+    @ExceptionHandler({BadCredentialsException.class, AuthenticationException.class})
+    public ResponseEntity<HttpErrorResponse> handleAuthenticationException(AuthenticationException ex) {
         return buildErrorResponse(
                 HttpStatus.UNAUTHORIZED,
                 HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                ex.getMessage(),
+                "Отсутствует или некорректный токен аунтификации",
                 ex
         );
     }
 
-    @ExceptionHandler({AuthenticationException.class, AccessDeniedException.class})
-    public ResponseEntity<HttpErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<HttpErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
         return buildErrorResponse(
                 HttpStatus.FORBIDDEN,
                 HttpStatus.FORBIDDEN.getReasonPhrase(),
-                StringUtils.hasText(ex.getMessage()) ?
-                        ex.getMessage() : "У вас нет прав для выполнения данного действия",
+                "Недостаточно прав для выполнения данного действия",
                 ex
         );
     }

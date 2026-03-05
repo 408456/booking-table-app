@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,13 +26,6 @@ public class UserControllerImpl implements UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> create(CreateUserRequest createUserRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(createUserRequest));
-    }
-
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponse> updateProfile(UpdateUserProfileRequest updateUserProfileRequest) {
-        return ResponseEntity.ok(userService.updateProfile(updateUserProfileRequest));
     }
 
     @Override
@@ -53,5 +45,11 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<UserListResponse> getUsers(Integer page, Integer pageSize) {
         PageRequest pageable = PageRequest.of(Math.max(page - 1, 0), Math.max(pageSize, 1));
         return ResponseEntity.ok(userService.getUsers(pageable));
+    }
+
+    @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    public ResponseEntity<UserResponse> updateProfile(UpdateUserProfileRequest updateUserProfileRequest) {
+        return ResponseEntity.ok(userService.updateProfile(updateUserProfileRequest));
     }
 }

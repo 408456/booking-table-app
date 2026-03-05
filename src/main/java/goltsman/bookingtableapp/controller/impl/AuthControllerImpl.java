@@ -2,8 +2,10 @@ package goltsman.bookingtableapp.controller.impl;
 
 import goltsman.bookingtableapp.controller.AuthController;
 import goltsman.bookingtableapp.model.request.RefreshTokenRequest;
-import goltsman.bookingtableapp.model.request.UserCredentialsRequest;
-import goltsman.bookingtableapp.model.responce.JwtAuthenticationResponse;
+import goltsman.bookingtableapp.model.request.SignUpRequest;
+import goltsman.bookingtableapp.model.request.SignInRequest;
+import goltsman.bookingtableapp.model.responce.JwtResponse;
+import goltsman.bookingtableapp.model.responce.MessageResponse;
 import goltsman.bookingtableapp.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +20,17 @@ public class AuthControllerImpl implements AuthController {
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<JwtAuthenticationResponse> singIn(UserCredentialsRequest request) {
+    public ResponseEntity<JwtResponse> singIn(SignInRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.signIn(request));
     }
 
     @Override
-    public ResponseEntity<JwtAuthenticationResponse> refresh(RefreshTokenRequest request) {
+    public ResponseEntity<MessageResponse> signUp(SignUpRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(request));
+    }
+
+    @Override
+    public ResponseEntity<JwtResponse> refresh(RefreshTokenRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.refreshToken(request));
     }
 }

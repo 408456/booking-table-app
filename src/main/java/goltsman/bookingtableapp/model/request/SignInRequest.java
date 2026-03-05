@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCredentialsRequest {
+public class SignInRequest {
     @NotBlank
     @Schema(description = "почта пользователя", example = "admin@example.com")
     private String email;

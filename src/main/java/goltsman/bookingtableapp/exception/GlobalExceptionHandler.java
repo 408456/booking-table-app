@@ -5,12 +5,15 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.naming.AuthenticationException;
+import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
@@ -25,10 +28,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(errorResponse);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<HttpErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<String> errorMessages = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .toList();
+        String errorMessage = String.join(", ", errorMessages);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                errorMessage, ex);
+    }
+
     @ExceptionHandler({
             NumberFormatException.class,
             IllegalArgumentException.class,
-            ConstraintViolationException.class
+            ConstraintViolationException.class,
     })
     public ResponseEntity<HttpErrorResponse> handleBadRequest(Exception ex) {
         return buildErrorResponse(
@@ -40,24 +56,21 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<HttpErrorResponse> handleConflict(ResourceAlreadyExistsException ex) {
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<HttpErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         return buildErrorResponse(
-                HttpStatus.CONFLICT,
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                StringUtils.hasText(ex.getMessage()) ?
-                        ex.getMessage() : "Ресурс уже существует",
-                ex
-        );
+                HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Некорректный формат запроса. Проверьте JSON и кавычки.",
+                ex);
     }
 
-    @ExceptionHandler({EntityNotFoundException.class,})
-    public ResponseEntity<HttpErrorResponse> handleNotFound(EntityNotFoundException ex) {
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<HttpErrorResponse> handleBadCredentials(BadCredentialsException ex) {
         return buildErrorResponse(
-                HttpStatus.NOT_FOUND,
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                StringUtils.hasText(ex.getMessage()) ?
-                        ex.getMessage() : "Запрашиваемый ресурс не найден",
+                HttpStatus.UNAUTHORIZED,
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                ex.getMessage(),
                 ex
         );
     }
@@ -73,14 +86,35 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<HttpErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+    @ExceptionHandler({EntityNotFoundException.class,})
+    public ResponseEntity<HttpErrorResponse> handleNotFound(EntityNotFoundException ex) {
         return buildErrorResponse(
-                HttpStatus.UNAUTHORIZED,
-                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                ex.getMessage(),
+                HttpStatus.NOT_FOUND,
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                StringUtils.hasText(ex.getMessage()) ?
+                        ex.getMessage() : "Запрашиваемый ресурс не найден",
                 ex
         );
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<HttpErrorResponse> handleConflict(ResourceAlreadyExistsException ex) {
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                StringUtils.hasText(ex.getMessage()) ?
+                        ex.getMessage() : "Ресурс уже существует",
+                ex
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<HttpErrorResponse> handleEntityInternalServerException(Exception ex) {
+        return buildErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                "Неизвестная ошибка сервера. Попробуйте снова",
+                ex);
     }
 
 }

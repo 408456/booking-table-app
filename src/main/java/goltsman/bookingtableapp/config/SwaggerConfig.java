@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "Booking table app",
-                description = "Это приложение отвечает за бронирование столиков в ресторане",
+                description = "Приложение отвечает за бронирование столиков в ресторане",
                 version = "1.0.0",
                 contact = @Contact(
                         name = "Гольцман Глеб 408456", email = "https://web.telegram.org/k/#@dozdevoy")

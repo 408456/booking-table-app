@@ -2,6 +2,7 @@ package goltsman.bookingtableapp.security;
 
 import goltsman.bookingtableapp.model.User;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,13 @@ public class SecurityService {
         Object principal = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AuthenticationCredentialsNotFoundException("Пользователь не аутентифицирован");
+        }
         if (!(principal instanceof CustomUserDetails customUserDetails)) {
-            log.warn("Пользователь не аутентифицирован или principal не является CustomUserDetails");
+            log.warn("Principal не является CustomUserDetails");
             throw new AuthenticationCredentialsNotFoundException("Пользователь не аутентифицирован");
         }
 

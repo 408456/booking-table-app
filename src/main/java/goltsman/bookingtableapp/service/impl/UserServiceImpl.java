@@ -2,22 +2,16 @@ package goltsman.bookingtableapp.service.impl;
 
 import goltsman.bookingtableapp.mapper.UserMapper;
 import goltsman.bookingtableapp.model.User;
-import goltsman.bookingtableapp.model.dto.JwtAuthenticationDto;
-import goltsman.bookingtableapp.model.dto.RefreshTokenDto;
-import goltsman.bookingtableapp.model.dto.UserCredentialsDto;
 import goltsman.bookingtableapp.model.enums.RoleType;
 import goltsman.bookingtableapp.model.request.CreateUserRequest;
 import goltsman.bookingtableapp.model.request.UpdateUserProfileRequest;
 import goltsman.bookingtableapp.model.responce.UserResponse;
 import goltsman.bookingtableapp.repository.UserRepository;
 import goltsman.bookingtableapp.security.SecurityService;
-import goltsman.bookingtableapp.security.jwt.JwtService;
 import goltsman.bookingtableapp.service.UserService;
 import goltsman.bookingtableapp.service.UserValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +23,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final SecurityService securityService;
     private final UserValidationService userValidationService;
@@ -61,7 +54,10 @@ public class UserServiceImpl implements UserService {
         userValidationService.validatePhoneForUpdate(request.getPhone(), user);
 
         userMapper.mapUpdateUserProfileRequestToUser(request, user);
-        if (userValidationService.isEmailChanged(request.getEmail(), user)) user.setIsVerified(false);
+        if (userValidationService.isEmailChanged(request.getEmail(), user)) {
+            // TODO: отправка на почту кода подтверждения
+            user.setIsVerified(false);
+        }
 
         userRepository.save(user);
         log.info("Профиль пользователя с id {} успешно обновлен", user.getId());

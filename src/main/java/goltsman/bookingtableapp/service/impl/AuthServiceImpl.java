@@ -27,14 +27,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtAuthenticationResponse signIn(UserCredentialsRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Неверная почта или пароль"));
+                .orElseThrow(() -> new BadCredentialsException("Неверная почта"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Неверная почта или пароль");
+            throw new BadCredentialsException("Неверный пароль");
         }
 
         JwtAuthenticationResponse response = JwtAuthenticationResponse.builder()
-                .token(jwtService.generateAccessToken(user.getId())) // теперь userId
+                .token(jwtService.generateAccessToken(user.getId()))
                 .refreshToken(jwtService.generateRefreshToken(user.getId()))
                 .build();
 
@@ -44,20 +44,21 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtAuthenticationResponse refreshToken(RefreshTokenRequest request) {
-        if (!jwtService.validateToken(request.getRefreshToken())) {
-            throw new BadCredentialsException("Недействительный refresh токен");
+
+        var claims = jwtService.parseToken(request.getRefreshToken());
+
+        if (!jwtService.isRefreshToken(claims)) {
+            throw new BadCredentialsException("Неверный тип токена");
         }
 
-        Long userId = jwtService.getUserIdFromToken(request.getRefreshToken());
-        User user = userRepository.findById(userId)
+        Long userId = jwtService.extractUserId(claims);
+
+        userRepository.findById(userId)
                 .orElseThrow(() -> new BadCredentialsException("Пользователь не найден"));
 
-        JwtAuthenticationResponse response = JwtAuthenticationResponse.builder()
+        return JwtAuthenticationResponse.builder()
                 .token(jwtService.generateAccessToken(userId))
                 .refreshToken(request.getRefreshToken())
                 .build();
-
-        log.info("Токены обновлены для пользователя {}", user.getEmail());
-        return response;
     }
 }

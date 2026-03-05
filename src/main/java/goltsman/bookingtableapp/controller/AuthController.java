@@ -1,7 +1,6 @@
 package goltsman.bookingtableapp.controller;
 
 import goltsman.bookingtableapp.controller.annotation.CommonApiResponses;
-import goltsman.bookingtableapp.model.dto.JwtAuthenticationDto;
 import goltsman.bookingtableapp.model.request.RefreshTokenRequest;
 import goltsman.bookingtableapp.model.request.UserCredentialsRequest;
 import goltsman.bookingtableapp.model.responce.JwtAuthenticationResponse;

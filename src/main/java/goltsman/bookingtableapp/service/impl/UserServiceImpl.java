@@ -5,16 +5,23 @@ import goltsman.bookingtableapp.model.User;
 import goltsman.bookingtableapp.model.enums.RoleType;
 import goltsman.bookingtableapp.model.request.CreateUserRequest;
 import goltsman.bookingtableapp.model.request.UpdateUserProfileRequest;
+import goltsman.bookingtableapp.model.responce.MessageResponse;
+import goltsman.bookingtableapp.model.responce.UserListResponse;
 import goltsman.bookingtableapp.model.responce.UserResponse;
 import goltsman.bookingtableapp.repository.UserRepository;
 import goltsman.bookingtableapp.security.SecurityService;
 import goltsman.bookingtableapp.service.UserService;
 import goltsman.bookingtableapp.service.UserValidationService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -64,39 +71,40 @@ public class UserServiceImpl implements UserService {
         return userMapper.mapUserToUserResponse(user);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponse getUser(Long id) {
+        log.info("Попытка получить пользователя с id {}", id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id " + id + " не найден"));
+        return userMapper.mapUserToUserResponse(user);
+    }
 
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public UserResponse getById(Long id) {
-//        log.info("Попытка получить данные пользователя с id {}", id);
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id=" + id + " не найден"));
-//        return userMapper.mapUsertoCreateUserResponse(user);
-//    }
-//
-//
-//    @Transactional(readOnly = true)
-//    public UserListResponse getUsers(Pageable pageable) {
-//        log.info("Попытка получить список пользователей");
-//        Page<User> userPage = userRepository.findAll(pageable);
-//        List<UserResponse> users = userPage.getContent().stream()
-//                .map(userMapper::mapUsertoCreateUserResponse)
-//                .toList();
-//        return new UserListResponse(
-//                (int) userPage.getTotalElements(),
-//                pageable.getPageNumber() + 1,
-//                pageable.getPageSize(),
-//                pageable.getPageSize(),
-//                users
-//        );
-//    }
-//
-//
-//    @Override
-//    public UserResponse delete(Long id) {
-//        log.info("Попытка удалить пользователя с id {}", id);
-//
-//        return null;
-//    }
+    @Override
+    @Transactional(readOnly = true)
+    public UserListResponse getUsers(Pageable pageable) {
+        log.info("Попытка получить список пользователей");
+        Page<User> userPage = userRepository.findAll(pageable);
+        List<UserResponse> users = userPage.getContent().stream()
+                .map(userMapper::mapUserToUserResponse)
+                .toList();
+        return new UserListResponse(
+                (int) userPage.getTotalElements(),
+                pageable.getPageNumber() + 1,
+                pageable.getPageSize(),
+                pageable.getPageSize(),
+                users
+        );
+    }
+
+    @Override
+    @Transactional
+    public MessageResponse delete(Long id) {
+        log.info("Попытка удалить пользователя с id {}", id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id " + id + " не найден"));
+        userRepository.delete(user);
+        log.info("Пользователь с id " + id + " успешно удален");
+        return MessageResponse.builder().message("Пользователь c id " + id + " успешно удален").build();
+    }
 }

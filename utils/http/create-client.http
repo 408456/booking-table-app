@@ -1,0 +1,11 @@
+POST http://localhost:9696/api/v1/users
+Content-Type: application/json
+
+{
+  "firstName": "Ринат",
+  "lastName": "Госляков",
+  "phone": "+79939688322",
+  "email": "userclient@example.com",
+  "password": "Password123!",
+  "role": "CLIENT"
+}

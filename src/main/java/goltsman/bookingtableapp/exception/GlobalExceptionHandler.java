@@ -9,6 +9,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -44,7 +45,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             NumberFormatException.class,
             IllegalArgumentException.class,
-            ConstraintViolationException.class,
+            MissingPathVariableException.class,
+            ConstraintViolationException.class
     })
     public ResponseEntity<HttpErrorResponse> handleBadRequest(Exception ex) {
         return buildErrorResponse(

@@ -3,6 +3,7 @@ package goltsman.bookingtableapp.controller.impl;
 import goltsman.bookingtableapp.controller.UserController;
 import goltsman.bookingtableapp.model.request.CreateUserRequest;
 import goltsman.bookingtableapp.model.request.UpdateUserProfileRequest;
+import goltsman.bookingtableapp.model.responce.MessageResponse;
 import goltsman.bookingtableapp.model.responce.UserListResponse;
 import goltsman.bookingtableapp.model.responce.UserResponse;
 import goltsman.bookingtableapp.service.UserService;
@@ -36,22 +37,22 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(userService.updateProfile(updateUserProfileRequest));
     }
 
-//    @Override
-//    @Secured(ADMIN)
-//    public ResponseEntity<UserResponse> getById(Long id) {
-//        return ResponseEntity.ok(userService.getById(id));
-//    }
-//
-//    @Override
-//    @Secured(ADMIN)
-//    public ResponseEntity<UserListResponse> getUsers(Integer page, Integer pageSize) {
-//        PageRequest pageable = PageRequest.of(Math.max(page - 1, 0), Math.max(pageSize, 1));
-//        return ResponseEntity.ok(userService.getUsers(pageable));
-//    }
-//
-//    @Override
-//    @Secured(ADMIN)
-//    public ResponseEntity<UserResponse> delete(Long userId) {
-//        return ResponseEntity.ok(userService.delete(userId));
-//    }
+    @Override
+    @Secured(ADMIN)
+    public ResponseEntity<UserResponse> getUser(Long id) {
+        return ResponseEntity.ok(userService.getUser(id));
+    }
+
+    @Override
+    @Secured(ADMIN)
+    public ResponseEntity<MessageResponse> delete(Long id) {
+        return ResponseEntity.ok(userService.delete(id));
+    }
+
+    @Override
+    @Secured(ADMIN)
+    public ResponseEntity<UserListResponse> getUsers(Integer page, Integer pageSize) {
+        PageRequest pageable = PageRequest.of(Math.max(page - 1, 0), Math.max(pageSize, 1));
+        return ResponseEntity.ok(userService.getUsers(pageable));
+    }
 }

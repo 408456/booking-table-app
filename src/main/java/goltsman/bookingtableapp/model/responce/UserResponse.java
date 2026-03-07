@@ -11,9 +11,6 @@ public record UserResponse(
         @Schema(description = "Уникальный идентификатор пользователя", example = "12")
         Long id,
 
-        @Schema(description = "Роль пользователя", example = "ADMIN")
-        RoleType role,
-
         @Schema(description = "Имя пользователя", example = "Ринат")
         String firstName,
 
@@ -25,6 +22,9 @@ public record UserResponse(
 
         @Schema(description = "Адрес электронной почты пользователя", example = "mail@mail.ru")
         String email,
+
+        @Schema(description = "Роль пользователя", example = "ADMIN")
+        RoleType role,
 
         @Schema(description = "Флаг верификации пользователя", example = "true")
         Boolean isVerified,

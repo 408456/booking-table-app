@@ -1,0 +1,22 @@
+users:
+  - id: 1
+    first_name: Admin
+    last_name: Admin
+    phone: "+79000000001"
+    email: "admin@test.com"
+    password: "$2a$04$Z.JVftXdS0Lc6pQLMAaKv.P4A.X9o2F9b19C0PGS/uhc9kjPK89Y6"
+    is_verified: true
+    role: "ADMIN"
+    created_at: "2024-01-01T10:00:00Z"
+    updated_at: "2024-02-01T10:00:00Z"
+
+  - id: 2
+    first_name: Client
+    last_name: Client
+    phone: "+79000000002"
+    email: "client@test.com"
+    password: "$2a$04$Z.JVftXdS0Lc6pQLMAaKv.P4A.X9o2F9b19C0PGS/uhc9kjPK89Y6"
+    is_verified: true
+    role: "CLIENT"
+    created_at: "2024-01-01T10:00:00Z"
+    updated_at: "2024-02-01T10:00:00Z"

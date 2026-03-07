@@ -1,11 +1,11 @@
 package goltsman.bookingtableapp.controller;
 
 import goltsman.bookingtableapp.controller.annotation.CommonApiResponses;
-import goltsman.bookingtableapp.model.request.CreateUserRequest;
-import goltsman.bookingtableapp.model.request.UpdateUserProfileRequest;
+import goltsman.bookingtableapp.model.request.user.CreateUserRequest;
+import goltsman.bookingtableapp.model.request.user.UpdateUserProfileRequest;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
-import goltsman.bookingtableapp.model.responce.UserListResponse;
-import goltsman.bookingtableapp.model.responce.UserResponse;
+import goltsman.bookingtableapp.model.responce.user.UserListResponse;
+import goltsman.bookingtableapp.model.responce.user.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

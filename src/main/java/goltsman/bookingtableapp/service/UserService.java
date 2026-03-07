@@ -1,10 +1,10 @@
 package goltsman.bookingtableapp.service;
 
-import goltsman.bookingtableapp.model.request.CreateUserRequest;
-import goltsman.bookingtableapp.model.request.UpdateUserProfileRequest;
+import goltsman.bookingtableapp.model.request.user.CreateUserRequest;
+import goltsman.bookingtableapp.model.request.user.UpdateUserProfileRequest;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
-import goltsman.bookingtableapp.model.responce.UserListResponse;
-import goltsman.bookingtableapp.model.responce.UserResponse;
+import goltsman.bookingtableapp.model.responce.user.UserListResponse;
+import goltsman.bookingtableapp.model.responce.user.UserResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {

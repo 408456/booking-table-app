@@ -1,6 +1,6 @@
 package goltsman.bookingtableapp.security;
 
-import goltsman.bookingtableapp.model.User;
+import goltsman.bookingtableapp.model.entity.User;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

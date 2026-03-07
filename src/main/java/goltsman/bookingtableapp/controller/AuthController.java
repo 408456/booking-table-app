@@ -1,10 +1,10 @@
 package goltsman.bookingtableapp.controller;
 
 import goltsman.bookingtableapp.controller.annotation.CommonApiResponses;
-import goltsman.bookingtableapp.model.request.RefreshTokenRequest;
-import goltsman.bookingtableapp.model.request.SignUpRequest;
-import goltsman.bookingtableapp.model.request.SignInRequest;
-import goltsman.bookingtableapp.model.responce.JwtResponse;
+import goltsman.bookingtableapp.model.request.auth.RefreshTokenRequest;
+import goltsman.bookingtableapp.model.request.auth.SignUpRequest;
+import goltsman.bookingtableapp.model.request.auth.SignInRequest;
+import goltsman.bookingtableapp.model.responce.auth.JwtResponse;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

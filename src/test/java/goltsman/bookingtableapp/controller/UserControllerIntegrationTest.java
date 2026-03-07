@@ -1,10 +1,9 @@
 package goltsman.bookingtableapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import goltsman.bookingtableapp.mapper.UserMapper;
-import goltsman.bookingtableapp.model.request.CreateUserRequest;
+import goltsman.bookingtableapp.model.request.user.CreateUserRequest;
 import goltsman.bookingtableapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

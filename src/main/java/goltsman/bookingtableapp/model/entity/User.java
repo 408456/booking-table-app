@@ -1,4 +1,4 @@
-package goltsman.bookingtableapp.model;
+package goltsman.bookingtableapp.model.entity;
 
 import goltsman.bookingtableapp.model.enums.RoleType;
 import jakarta.persistence.*;

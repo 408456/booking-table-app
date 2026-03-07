@@ -1,7 +1,6 @@
 package goltsman.bookingtableapp.service;
 
-import goltsman.bookingtableapp.exception.ResourceAlreadyExistsException;
-import goltsman.bookingtableapp.model.User;
+import goltsman.bookingtableapp.model.entity.User;
 
 public interface UserValidationService {
 

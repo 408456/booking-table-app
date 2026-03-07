@@ -1,10 +1,10 @@
 package goltsman.bookingtableapp.controller.impl;
 
 import goltsman.bookingtableapp.controller.AuthController;
-import goltsman.bookingtableapp.model.request.RefreshTokenRequest;
-import goltsman.bookingtableapp.model.request.SignUpRequest;
-import goltsman.bookingtableapp.model.request.SignInRequest;
-import goltsman.bookingtableapp.model.responce.JwtResponse;
+import goltsman.bookingtableapp.model.request.auth.RefreshTokenRequest;
+import goltsman.bookingtableapp.model.request.auth.SignUpRequest;
+import goltsman.bookingtableapp.model.request.auth.SignInRequest;
+import goltsman.bookingtableapp.model.responce.auth.JwtResponse;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
 import goltsman.bookingtableapp.service.AuthService;
 import lombok.RequiredArgsConstructor;

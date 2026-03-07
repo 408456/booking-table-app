@@ -1,4 +1,4 @@
-package goltsman.bookingtableapp.model.responce;
+package goltsman.bookingtableapp.model.responce.user;
 
 import goltsman.bookingtableapp.model.enums.RoleType;
 import io.swagger.v3.oas.annotations.media.Schema;

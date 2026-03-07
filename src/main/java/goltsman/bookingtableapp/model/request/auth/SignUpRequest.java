@@ -1,20 +1,15 @@
-package goltsman.bookingtableapp.model.request;
+package goltsman.bookingtableapp.model.request.auth;
 
 import goltsman.bookingtableapp.common.ValidationPatternConstant;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateUserProfileRequest {
+public class SignUpRequest {
 
     @Schema(description = "имя пользователя", example = "Обновленный Ринат", minLength = 1, maxLength = 50)
     @Size(min = 1, max = 50, message = "Длина имени пользователя должна быть от 1 до 50 символов")
@@ -40,4 +35,10 @@ public class UpdateUserProfileRequest {
             message = ValidationPatternConstant.EMAIL_PATTERN_MESSAGE_ERROR)
     private String email;
 
+    @Schema(description = "пароль пользователя", example = "Password123!", minLength = 8, maxLength = 255)
+    @NotBlank
+    @Size(min = 8, max = 255, message = "Длина пароля должна быть от 8 до 255 символов")
+    @Pattern(regexp = ValidationPatternConstant.PASSWORD_PATTERN,
+            message = ValidationPatternConstant.PASSWORD_PATTERN_MESSAGE_ERROR)
+    private String password;
 }

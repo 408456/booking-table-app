@@ -1,11 +1,11 @@
 package goltsman.bookingtableapp.service.impl;
 
 import goltsman.bookingtableapp.mapper.UserMapper;
-import goltsman.bookingtableapp.model.User;
-import goltsman.bookingtableapp.model.request.RefreshTokenRequest;
-import goltsman.bookingtableapp.model.request.SignUpRequest;
-import goltsman.bookingtableapp.model.request.SignInRequest;
-import goltsman.bookingtableapp.model.responce.JwtResponse;
+import goltsman.bookingtableapp.model.entity.User;
+import goltsman.bookingtableapp.model.request.auth.RefreshTokenRequest;
+import goltsman.bookingtableapp.model.request.auth.SignUpRequest;
+import goltsman.bookingtableapp.model.request.auth.SignInRequest;
+import goltsman.bookingtableapp.model.responce.auth.JwtResponse;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
 import goltsman.bookingtableapp.repository.UserRepository;
 import goltsman.bookingtableapp.security.jwt.JwtService;
@@ -14,7 +14,6 @@ import goltsman.bookingtableapp.service.UserValidationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.bridge.Message;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

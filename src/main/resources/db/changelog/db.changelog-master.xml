@@ -10,4 +10,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <include file="2026/03/2026-03-07_create_restaurant_and_cuisune_tables.sql" author="Goltsman Gleb"
              relativeToChangelogFile="true"/>
 
+    <include file="dataset.sql" author="Goltsman Gleb"
+             relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

@@ -1,6 +1,6 @@
 package goltsman.bookingtableapp.repository;
 
-import goltsman.bookingtableapp.model.User;
+import goltsman.bookingtableapp.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

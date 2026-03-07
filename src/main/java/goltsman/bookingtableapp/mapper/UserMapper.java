@@ -1,10 +1,10 @@
 package goltsman.bookingtableapp.mapper;
 
-import goltsman.bookingtableapp.model.User;
-import goltsman.bookingtableapp.model.request.CreateUserRequest;
-import goltsman.bookingtableapp.model.request.SignUpRequest;
-import goltsman.bookingtableapp.model.request.UpdateUserProfileRequest;
-import goltsman.bookingtableapp.model.responce.UserResponse;
+import goltsman.bookingtableapp.model.entity.User;
+import goltsman.bookingtableapp.model.request.user.CreateUserRequest;
+import goltsman.bookingtableapp.model.request.auth.SignUpRequest;
+import goltsman.bookingtableapp.model.request.user.UpdateUserProfileRequest;
+import goltsman.bookingtableapp.model.responce.user.UserResponse;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

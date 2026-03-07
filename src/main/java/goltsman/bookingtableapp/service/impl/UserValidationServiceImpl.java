@@ -1,7 +1,7 @@
 package goltsman.bookingtableapp.service.impl;
 
 import goltsman.bookingtableapp.exception.ResourceAlreadyExistsException;
-import goltsman.bookingtableapp.model.User;
+import goltsman.bookingtableapp.model.entity.User;
 import goltsman.bookingtableapp.repository.UserRepository;
 import goltsman.bookingtableapp.service.UserValidationService;
 import lombok.RequiredArgsConstructor;

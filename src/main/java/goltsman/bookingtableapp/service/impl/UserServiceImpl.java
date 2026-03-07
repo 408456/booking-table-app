@@ -1,13 +1,13 @@
 package goltsman.bookingtableapp.service.impl;
 
 import goltsman.bookingtableapp.mapper.UserMapper;
-import goltsman.bookingtableapp.model.User;
+import goltsman.bookingtableapp.model.entity.User;
 import goltsman.bookingtableapp.model.enums.RoleType;
-import goltsman.bookingtableapp.model.request.CreateUserRequest;
-import goltsman.bookingtableapp.model.request.UpdateUserProfileRequest;
+import goltsman.bookingtableapp.model.request.user.CreateUserRequest;
+import goltsman.bookingtableapp.model.request.user.UpdateUserProfileRequest;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
-import goltsman.bookingtableapp.model.responce.UserListResponse;
-import goltsman.bookingtableapp.model.responce.UserResponse;
+import goltsman.bookingtableapp.model.responce.user.UserListResponse;
+import goltsman.bookingtableapp.model.responce.user.UserResponse;
 import goltsman.bookingtableapp.repository.UserRepository;
 import goltsman.bookingtableapp.security.SecurityService;
 import goltsman.bookingtableapp.service.UserService;

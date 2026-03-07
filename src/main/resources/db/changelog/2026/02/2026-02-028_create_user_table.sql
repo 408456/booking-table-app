@@ -1,6 +1,12 @@
-CREATE TYPE role_type AS ENUM ('ADMIN', 'CLIENT');
+DO $$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'role_type') THEN
+    CREATE TYPE role_type AS ENUM ('ADMIN', 'CLIENT');
+    END IF;
+    END
+$$;
 
-CREATE TABLE users
+CREATE TABLE IF NOT EXISTS users
 (
     id          BIGSERIAL PRIMARY KEY,
     first_name  VARCHAR(100) NOT NULL,

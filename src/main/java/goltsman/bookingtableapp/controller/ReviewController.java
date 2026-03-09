@@ -1,11 +1,11 @@
 package goltsman.bookingtableapp.controller;
 
 import goltsman.bookingtableapp.controller.annotation.CommonApiResponses;
-import goltsman.bookingtableapp.model.request.restaurant.CreateRestaurantRequest;
-import goltsman.bookingtableapp.model.request.restaurant.UpdateRestaurantRequest;
+import goltsman.bookingtableapp.model.request.review.CreateReviewRequest;
+import goltsman.bookingtableapp.model.request.review.UpdateReviewRequest;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
-import goltsman.bookingtableapp.model.responce.restaurant.RestaurantListResponse;
-import goltsman.bookingtableapp.model.responce.restaurant.RestaurantResponse;
+import goltsman.bookingtableapp.model.responce.review.ReviewListResponse;
+import goltsman.bookingtableapp.model.responce.review.ReviewResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,63 +25,56 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.math.BigDecimal;
-
 import static goltsman.bookingtableapp.common.ApiConstant.ID;
-import static goltsman.bookingtableapp.common.ApiConstant.RESTAURANT_CONTROLLER_URL;
-
+import static goltsman.bookingtableapp.common.ApiConstant.REVIEW_CONTROLLER_URL;
 
 @Validated
-@RequestMapping(RESTAURANT_CONTROLLER_URL)
-@Tag(name = "Контроллер ресторанов",
-        description = "Позволяет выполнять операции с ресторанами")
-public interface RestaurantController {
+@RequestMapping(REVIEW_CONTROLLER_URL)
+@Tag(name = "Контроллер отзывов",
+        description = "Позволяет выполнять операции с отзывами")
+public interface ReviewController {
 
     @Operation(
-            summary = "Создание ресторана",
-            description = "Создает ресторан",
+            summary = "Создание отзыва",
+            description = "Создает отзыв на ресторан от имени текущего пользователя",
             responses = @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantResponse.class))))
+                            schema = @Schema(implementation = ReviewResponse.class))))
     @CommonApiResponses
     @PostMapping
-    ResponseEntity<RestaurantResponse> create(
-            @Valid @RequestBody CreateRestaurantRequest request);
-
+    ResponseEntity<ReviewResponse> create(@Valid @RequestBody CreateReviewRequest request);
 
     @Operation(
-            summary = "Получение ресторана по id",
-            description = "Возвращает детальную информацию о ресторане",
+            summary = "Получение отзыва по id",
+            description = "Возвращает детальную информацию об отзыве",
             responses = @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantResponse.class))))
+                            schema = @Schema(implementation = ReviewResponse.class))))
     @CommonApiResponses
     @GetMapping(ID)
-    ResponseEntity<RestaurantResponse> getRestaurant(
-            @Min(value = 1, message = "id ресторана должен быть больше 0")
+    ResponseEntity<ReviewResponse> getReview(
+            @Min(value = 1, message = "id отзыва должен быть больше 0")
             @PathVariable Long id);
 
-
     @Operation(
-            summary = "Обновление ресторана",
-            description = "Обновляет данные ресторана",
+            summary = "Обновление отзыва",
+            description = "Обновляет данные отзыва (только автор или админ)",
             responses = @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantResponse.class))))
+                            schema = @Schema(implementation = ReviewResponse.class))))
     @CommonApiResponses
     @PutMapping(ID)
-    ResponseEntity<RestaurantResponse> update(
-            @Min(value = 1, message = "id ресторана должен быть больше 0")
+    ResponseEntity<ReviewResponse> update(
+            @Min(value = 1, message = "id отзыва должен быть больше 0")
             @PathVariable Long id,
-            @Valid @RequestBody UpdateRestaurantRequest request);
-
+            @Valid @RequestBody UpdateReviewRequest request);
 
     @Operation(
-            summary = "Удаление ресторана",
-            description = "Удаляет ресторан",
+            summary = "Удаление отзыва",
+            description = "Удаляет отзыв (только автор или админ)",
             responses = @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
@@ -89,36 +82,26 @@ public interface RestaurantController {
     @CommonApiResponses
     @DeleteMapping(ID)
     ResponseEntity<MessageResponse> delete(
-            @Min(value = 1, message = "id ресторана должен быть больше 0")
+            @Min(value = 1, message = "id отзыва должен быть больше 0")
             @PathVariable Long id);
 
-
     @Operation(
-            summary = "Получение списка ресторанов",
-            description = "Список ресторанов с фильтрацией и пагинацией",
+            summary = "Получение списка отзывов",
+            description = "Список отзывов с фильтрацией, пагинацией и сортировкой",
             responses = @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantListResponse.class))))
+                            schema = @Schema(implementation = ReviewListResponse.class))))
     @CommonApiResponses
     @GetMapping
-    ResponseEntity<RestaurantListResponse> getRestaurants(
-
-            @RequestParam(required = false) String title,
-
-            @RequestParam(required = false) Long cuisineId,
-
-            @RequestParam(required = false) String address,
-
-            @RequestParam(required = false) BigDecimal minAvgSum,
-
-            @RequestParam(required = false) BigDecimal maxAvgSum,
-
-            @RequestParam(required = false) Boolean isPublished,
-
+    ResponseEntity<ReviewListResponse> getReviews(
+            @RequestParam(required = false) Long restaurantId,
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) Integer rating,
+            @RequestParam(required = false) Integer minRating,
+            @RequestParam(required = false) Integer maxRating,
             @Min(value = 1, message = "Номер страницы должен быть больше 0")
             @RequestParam(defaultValue = "1") Integer page,
-
             @Min(value = 1, message = "Размер страницы должен быть больше 0")
             @Max(value = 100, message = "Размер страницы не должен быть больше 100")
             @RequestParam(defaultValue = "10") Integer pageSize

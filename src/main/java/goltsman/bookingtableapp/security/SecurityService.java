@@ -30,4 +30,9 @@ public class SecurityService {
         log.info("Текущий пользователь: {}", customUserDetails.user().getEmail());
         return customUserDetails.user();
     }
+
+    public boolean isAdmin() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
 }

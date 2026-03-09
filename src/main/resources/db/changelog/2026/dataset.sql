@@ -42,3 +42,27 @@ VALUES (1, 1),
        (2, 1),
        (2, 2),
        (2, 3);
+
+INSERT INTO reviews (restaurant_id, user_id, rating, comment, created_at)
+VALUES (1, 2, 5, 'Отличный ресторан, рекомендую', DEFAULT),
+       (2, 2, 4, 'Хорошее место, но высокие цены', DEFAULT),
+       (1, 1, 3, 'Очень шумно и грязно', DEFAULT),
+       (2, 1, 5, 'Прекрасный вид, вкусная еда', DEFAULT);
+
+INSERT INTO tables (restaurant_id, seats, description, is_available)
+VALUES (1, 2, 'Маленький столик у окна', TRUE),
+       (1, 4, 'Стол в центре зала', FALSE),
+       (1, 6, 'Большой стол для компании', TRUE),
+       (1, 8, 'Банкетный стол', FALSE),
+
+       (2, 2, 'Столик в углу для двоих', TRUE),
+       (2, 4, 'Круглый стол для компании', FALSE),
+       (2, 6, 'Семейный стол', TRUE),
+       (2, 8, 'Стол на террасе', FALSE);
+
+
+INSERT INTO bookings (restaurant_id, user_id, table_id, booking_time, guests_count, status)
+VALUES (1, 2, 1, '2025-04-10 18:00:00', 2, 'CREATED'),
+       (1, 1, 3, '2025-04-11 20:00:00', 5, 'CONFIRMED'),
+       (2, 1, 1, '2025-04-09 17:00:00', 2, 'COMPLETED'),
+       (2, 2, 5, '2025-04-10 19:00:00', 2, 'CANCELLED');

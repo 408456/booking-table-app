@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static goltsman.bookingtableapp.common.ApiConstant.BASE_USER_CONTROLLER_URL;
 import static goltsman.bookingtableapp.common.ApiConstant.ID;
 import static goltsman.bookingtableapp.common.ApiConstant.ME_URL;
+import static goltsman.bookingtableapp.common.ApiConstant.USER_CONTROLLER_URL;
 
 @Validated
-@RequestMapping(BASE_USER_CONTROLLER_URL)
+@RequestMapping(USER_CONTROLLER_URL)
 @Tag(name = "Контроллер пользователей",
         description = "Этот контроллер позволяет выполнять различные операции с пользователями")
 public interface UserController {

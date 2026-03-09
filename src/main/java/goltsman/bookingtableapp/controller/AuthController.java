@@ -2,10 +2,10 @@ package goltsman.bookingtableapp.controller;
 
 import goltsman.bookingtableapp.controller.annotation.CommonApiResponses;
 import goltsman.bookingtableapp.model.request.auth.RefreshTokenRequest;
-import goltsman.bookingtableapp.model.request.auth.SignUpRequest;
 import goltsman.bookingtableapp.model.request.auth.SignInRequest;
-import goltsman.bookingtableapp.model.responce.auth.JwtResponse;
+import goltsman.bookingtableapp.model.request.auth.SignUpRequest;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
+import goltsman.bookingtableapp.model.responce.auth.JwtResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import static goltsman.bookingtableapp.common.ApiConstant.BASE_AUTH_CONTROLLER_URL;
+import static goltsman.bookingtableapp.common.ApiConstant.AUTH_CONTROLLER_URL;
 import static goltsman.bookingtableapp.common.ApiConstant.REFRESH_URL;
 import static goltsman.bookingtableapp.common.ApiConstant.SIGN_IN_URL;
 
 @Validated
-@RequestMapping(BASE_AUTH_CONTROLLER_URL)
+@RequestMapping(AUTH_CONTROLLER_URL)
 @Tag(name = "Контроллер аунтификации", description = "Этот контроллер позволяет пользователям авторизовываться в системе")
 public interface AuthController {
 

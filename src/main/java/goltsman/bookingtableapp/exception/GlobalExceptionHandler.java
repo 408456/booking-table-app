@@ -84,7 +84,8 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(
                 HttpStatus.FORBIDDEN,
                 HttpStatus.FORBIDDEN.getReasonPhrase(),
-                "Недостаточно прав для выполнения данного действия",
+                StringUtils.hasText(ex.getMessage()) ?
+                        ex.getMessage() : "Недостаточно прав для выполнения данного действия",
                 ex
         );
     }

@@ -14,15 +14,21 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-import static goltsman.bookingtableapp.common.ApiConstant.BASE_CUISINE_CONTROLLER_URL;
+import static goltsman.bookingtableapp.common.ApiConstant.CUISINE_CONTROLLER_URL;
 import static goltsman.bookingtableapp.common.ApiConstant.ID;
 
 @Validated
-@RequestMapping(BASE_CUISINE_CONTROLLER_URL)
+@RequestMapping(CUISINE_CONTROLLER_URL)
 @Tag(name = "Контроллер кухонь",
         description = "Этот контроллер позволяет выполнять различные операции с кухонями")
 public interface CuisineController {

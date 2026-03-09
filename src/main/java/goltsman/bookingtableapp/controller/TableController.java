@@ -1,11 +1,11 @@
 package goltsman.bookingtableapp.controller;
 
 import goltsman.bookingtableapp.controller.annotation.CommonApiResponses;
-import goltsman.bookingtableapp.model.request.restaurant.CreateRestaurantRequest;
-import goltsman.bookingtableapp.model.request.restaurant.UpdateRestaurantRequest;
+import goltsman.bookingtableapp.model.request.restaurant.CreateTableRequest;
+import goltsman.bookingtableapp.model.request.restaurant.UpdateTableRequest;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
-import goltsman.bookingtableapp.model.responce.restaurant.RestaurantListResponse;
-import goltsman.bookingtableapp.model.responce.restaurant.RestaurantResponse;
+import goltsman.bookingtableapp.model.responce.restaurant.TableListResponse;
+import goltsman.bookingtableapp.model.responce.restaurant.TableResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,63 +25,56 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.math.BigDecimal;
-
 import static goltsman.bookingtableapp.common.ApiConstant.ID;
-import static goltsman.bookingtableapp.common.ApiConstant.RESTAURANT_CONTROLLER_URL;
-
+import static goltsman.bookingtableapp.common.ApiConstant.TABLE_CONTROLLER_URL;
 
 @Validated
-@RequestMapping(RESTAURANT_CONTROLLER_URL)
-@Tag(name = "Контроллер ресторанов",
-        description = "Позволяет выполнять операции с ресторанами")
-public interface RestaurantController {
+@RequestMapping(TABLE_CONTROLLER_URL)
+@Tag(name = "Контроллер столов",
+        description = "Позволяет выполнять операции со столами в ресторанах")
+public interface TableController {
 
     @Operation(
-            summary = "Создание ресторана",
-            description = "Создает ресторан",
+            summary = "Создание стола",
+            description = "Создает стол для ресторана",
             responses = @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantResponse.class))))
+                            schema = @Schema(implementation = TableResponse.class))))
     @CommonApiResponses
     @PostMapping
-    ResponseEntity<RestaurantResponse> create(
-            @Valid @RequestBody CreateRestaurantRequest request);
-
+    ResponseEntity<TableResponse> create(@Valid @RequestBody CreateTableRequest request);
 
     @Operation(
-            summary = "Получение ресторана по id",
-            description = "Возвращает детальную информацию о ресторане",
+            summary = "Получение стола по id",
+            description = "Возвращает детальную информацию о столе",
             responses = @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantResponse.class))))
+                            schema = @Schema(implementation = TableResponse.class))))
     @CommonApiResponses
     @GetMapping(ID)
-    ResponseEntity<RestaurantResponse> getRestaurant(
-            @Min(value = 1, message = "id ресторана должен быть больше 0")
+    ResponseEntity<TableResponse> getTable(
+            @Min(value = 1, message = "id стола должен быть больше 0")
             @PathVariable Long id);
 
-
     @Operation(
-            summary = "Обновление ресторана",
-            description = "Обновляет данные ресторана",
+            summary = "Обновление стола",
+            description = "Обновляет данные стола",
             responses = @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantResponse.class))))
+                            schema = @Schema(implementation = TableResponse.class))))
     @CommonApiResponses
     @PutMapping(ID)
-    ResponseEntity<RestaurantResponse> update(
-            @Min(value = 1, message = "id ресторана должен быть больше 0")
+    ResponseEntity<TableResponse> update(
+            @Min(value = 1, message = "id стола должен быть больше 0")
             @PathVariable Long id,
-            @Valid @RequestBody UpdateRestaurantRequest request);
-
+            @Valid @RequestBody UpdateTableRequest request);
 
     @Operation(
-            summary = "Удаление ресторана",
-            description = "Удаляет ресторан",
+            summary = "Удаление стола",
+            description = "Удаляет стол",
             responses = @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
@@ -89,36 +82,25 @@ public interface RestaurantController {
     @CommonApiResponses
     @DeleteMapping(ID)
     ResponseEntity<MessageResponse> delete(
-            @Min(value = 1, message = "id ресторана должен быть больше 0")
+            @Min(value = 1, message = "id стола должен быть больше 0")
             @PathVariable Long id);
 
-
     @Operation(
-            summary = "Получение списка ресторанов",
-            description = "Список ресторанов с фильтрацией и пагинацией",
+            summary = "Получение списка столов",
+            description = "Список столов с фильтрацией, пагинацией и сортировкой",
             responses = @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantListResponse.class))))
+                            schema = @Schema(implementation = TableListResponse.class))))
     @CommonApiResponses
     @GetMapping
-    ResponseEntity<RestaurantListResponse> getRestaurants(
-
-            @RequestParam(required = false) String title,
-
-            @RequestParam(required = false) Long cuisineId,
-
-            @RequestParam(required = false) String address,
-
-            @RequestParam(required = false) BigDecimal minAvgSum,
-
-            @RequestParam(required = false) BigDecimal maxAvgSum,
-
-            @RequestParam(required = false) Boolean isPublished,
-
+    ResponseEntity<TableListResponse> getTables(
+            @RequestParam(required = false) Long restaurantId,
+            @RequestParam(required = false) Integer minSeats,
+            @RequestParam(required = false) Integer maxSeats,
+            @RequestParam(required = false) Boolean isAvailable,
             @Min(value = 1, message = "Номер страницы должен быть больше 0")
             @RequestParam(defaultValue = "1") Integer page,
-
             @Min(value = 1, message = "Размер страницы должен быть больше 0")
             @Max(value = 100, message = "Размер страницы не должен быть больше 100")
             @RequestParam(defaultValue = "10") Integer pageSize

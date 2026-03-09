@@ -9,12 +9,14 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface RestaurantMapper {
 
+    @Mapping(target = "cuisines", ignore = true)
     Restaurant mapCreateRestaurantRequestToRestaurant(CreateRestaurantRequest request);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void mapUpdateRestaurantRequestToRestaurant(UpdateRestaurantRequest request,
-                                                @MappingTarget Restaurant restaurant);
+    @Mapping(target = "cuisines", ignore = true)
+    void mapUpdateRestaurantRequestToRestaurant(
+            UpdateRestaurantRequest request,
+            @MappingTarget Restaurant restaurant);
 
     RestaurantResponse mapRestaurantToRestaurantResponse(Restaurant restaurant);
-
 }

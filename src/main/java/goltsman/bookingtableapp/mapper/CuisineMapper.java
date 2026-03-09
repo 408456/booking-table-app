@@ -1,11 +1,13 @@
 package goltsman.bookingtableapp.mapper;
 
 import goltsman.bookingtableapp.model.entity.Cuisine;
-import  goltsman.bookingtableapp.model.request.cuisine.CreateCuisineRequest;
+import goltsman.bookingtableapp.model.request.restaurant.CreateCuisineRequest;
+import goltsman.bookingtableapp.model.request.restaurant.UpdateCuisineRequest;
 import goltsman.bookingtableapp.model.responce.restaurant.CuisineResponse;
-import goltsman.bookingtableapp.model.request.cuisine.UpdateCuisineRequest;
-import org.mapstruct.*;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface CuisineMapper {

@@ -14,19 +14,20 @@ public class SecurityService {
     public User getCurrentUser() {
         log.info("Попытка получить текущего пользователя из SecurityContext");
 
-        Object principal = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
+            log.warn("Пользователь не аутентифицирован");
             throw new AuthenticationCredentialsNotFoundException("Пользователь не аутентифицирован");
         }
+
+        Object principal = authentication.getPrincipal();
         if (!(principal instanceof CustomUserDetails customUserDetails)) {
             log.warn("Principal не является CustomUserDetails");
             throw new AuthenticationCredentialsNotFoundException("Пользователь не аутентифицирован");
         }
 
+        log.info("Текущий пользователь: {}", customUserDetails.user().getEmail());
         return customUserDetails.user();
     }
 }

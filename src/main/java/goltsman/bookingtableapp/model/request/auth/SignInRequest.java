@@ -13,10 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignInRequest {
     @NotBlank
-    @Schema(description = "почта пользователя", example = "admin@example.com")
+    @Schema(description = "почта пользователя", example = "admin@gmail.com")
     private String email;
-
     @NotBlank
-    @Schema(description = "пароль пользователя", example = "admin123")
+    @Schema(description = "пароль пользователя", example = "Password123!")
     private String password;
 }

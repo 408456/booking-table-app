@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,6 +17,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Table(name = "restaurants")
+@NamedEntityGraph(
+        name = "Restaurant.cuisines",
+        attributeNodes = @NamedAttributeNode("cuisines")
+)
 public class Restaurant {
 
     @Id
@@ -41,13 +46,13 @@ public class Restaurant {
     @Builder.Default
     private Boolean isPublished = false;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "restaurants_cuisines",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "cuisine_id")
     )
-    private Set<Cuisine> cuisines;
+    private Set<Cuisine> cuisines = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

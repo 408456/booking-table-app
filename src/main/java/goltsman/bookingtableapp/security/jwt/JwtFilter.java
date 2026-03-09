@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -31,27 +33,44 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        log.debug("Входящий Authorization header: {}", header);
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
+            log.info("Получен JWT токен: {}", token);
 
-            Claims claims = jwtService.parseToken(token);
+            try {
+                Claims claims = jwtService.parseToken(token);
+                log.debug("JWT claims: {}", claims);
 
-            if (!jwtService.isAccessToken(claims)) {
-                throw new RuntimeException("Неверный тип токена");
+                if (!jwtService.isAccessToken(claims)) {
+                    log.warn("Попытка использовать не access-токен");
+                    throw new RuntimeException("Неверный тип токена");
+                }
+
+                Long userId = jwtService.extractUserId(claims);
+                log.info("Из токена извлечен userId: {}", userId);
+
+                CustomUserDetails userDetails = userService.loadUserById(userId);
+                log.debug("Загружены UserDetails: {}", userDetails);
+
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+
+                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
+                log.info("Authentication успешно установлен для userId {}", userId);
+
+            } catch (Exception e) {
+                log.error("Ошибка при обработке JWT: {}", e.getMessage(), e);
             }
-
-            Long userId = jwtService.extractUserId(claims);
-            CustomUserDetails userDetails = userService.loadUserById(userId);
-
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-
-            auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        } else {
+            log.debug("JWT токен не найден или заголовок не Bearer");
         }
 
         filterChain.doFilter(request, response);

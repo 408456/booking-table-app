@@ -2,9 +2,6 @@ POST http://localhost:9696/auth/sign-in
 Content-Type: application/json
 
 {
-  "email": "valid_user_for_test@gmail.com",
-  "password": "My_password09!"
+  "email": "admin@gmail.com",
+  "password": "Password123!"
 }
-
-
-

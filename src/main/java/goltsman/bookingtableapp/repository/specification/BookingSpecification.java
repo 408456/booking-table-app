@@ -36,17 +36,17 @@ public class BookingSpecification {
         };
     }
 
-    public static Specification<Booking> byBookingTimeFrom(LocalDateTime from) {
+    public static Specification<Booking> byStartTimeFrom(LocalDateTime from) {
         return (root, query, cb) -> {
             if (from == null) return cb.conjunction();
-            return cb.greaterThanOrEqualTo(root.get("bookingTime"), from);
+            return cb.greaterThanOrEqualTo(root.get("startTime"), from);
         };
     }
 
-    public static Specification<Booking> byBookingTimeTo(LocalDateTime to) {
+    public static Specification<Booking> byStartTimeTo(LocalDateTime to) {
         return (root, query, cb) -> {
             if (to == null) return cb.conjunction();
-            return cb.lessThanOrEqualTo(root.get("bookingTime"), to);
+            return cb.lessThanOrEqualTo(root.get("startTime"), to);
         };
     }
 }

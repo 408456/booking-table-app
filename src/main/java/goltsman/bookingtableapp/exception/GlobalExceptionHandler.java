@@ -3,6 +3,7 @@ package goltsman.bookingtableapp.exception;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -13,13 +14,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.naming.AuthenticationException;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    //    InvalidDataAccessResourceUsageException, DateTimeParseException
 
     private ResponseEntity<HttpErrorResponse> buildErrorResponse(HttpStatus status,
                                                                  String type,
@@ -48,7 +53,9 @@ public class GlobalExceptionHandler {
             IllegalArgumentException.class,
             MissingPathVariableException.class,
             ConstraintViolationException.class,
-            IllegalStateException.class
+            IllegalStateException.class,
+            DateTimeParseException.class,
+            MethodArgumentTypeMismatchException.class
     })
     public ResponseEntity<HttpErrorResponse> handleBadRequest(Exception ex) {
         return buildErrorResponse(
@@ -69,8 +76,8 @@ public class GlobalExceptionHandler {
                 ex);
     }
 
-    @ExceptionHandler({BadCredentialsException.class, AuthenticationException.class})
-    public ResponseEntity<HttpErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<HttpErrorResponse> handleAuthenticationException(BadCredentialsException ex) {
         return buildErrorResponse(
                 HttpStatus.UNAUTHORIZED,
                 HttpStatus.UNAUTHORIZED.getReasonPhrase(),
@@ -108,6 +115,27 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT.getReasonPhrase(),
                 StringUtils.hasText(ex.getMessage()) ?
                         ex.getMessage() : "Ресурс уже существует",
+                ex
+        );
+    }
+
+    @ExceptionHandler(BookingConflictException.class)
+    public ResponseEntity<HttpErrorResponse> handleBookingConflict(BookingConflictException ex) {
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                StringUtils.hasText(ex.getMessage()) ? ex.getMessage() : "Конфликт при бронировании",
+                ex
+        );
+    }
+
+    @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
+    public ResponseEntity<HttpErrorResponse> handleDataAccessResourceUsage(InvalidDataAccessResourceUsageException ex) {
+        log.error("Ошибка доступа к данным", ex);
+        return buildErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Database Error",
+                "Ошибка при работе с базой данных. Неправильные аргументы запроса",
                 ex
         );
     }

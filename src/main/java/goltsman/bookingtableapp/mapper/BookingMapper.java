@@ -4,9 +4,11 @@ import goltsman.bookingtableapp.model.entity.Booking;
 import goltsman.bookingtableapp.model.request.booking.CreateBookingRequest;
 import goltsman.bookingtableapp.model.request.booking.UpdateBookingRequest;
 import goltsman.bookingtableapp.model.responce.booking.BookingResponse;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface BookingMapper {
@@ -19,6 +21,7 @@ public interface BookingMapper {
     @Mapping(target = "createdAt", ignore = true)
     Booking toEntity(CreateBookingRequest request);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntity(@MappingTarget Booking booking, UpdateBookingRequest request);
 
     @Mapping(source = "restaurant.id", target = "restaurantId")

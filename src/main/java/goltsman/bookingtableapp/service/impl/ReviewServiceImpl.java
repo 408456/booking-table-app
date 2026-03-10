@@ -10,6 +10,7 @@ import goltsman.bookingtableapp.model.request.review.CreateReviewRequest;
 import goltsman.bookingtableapp.model.request.review.UpdateReviewRequest;
 
 import goltsman.bookingtableapp.model.responce.MessageResponse;
+import goltsman.bookingtableapp.model.responce.restaurant.RestaurantResponse;
 import goltsman.bookingtableapp.model.responce.review.ReviewListResponse;
 import goltsman.bookingtableapp.model.responce.review.ReviewResponse;
 import goltsman.bookingtableapp.repository.RestaurantRepository;

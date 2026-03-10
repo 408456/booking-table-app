@@ -8,6 +8,9 @@ import goltsman.bookingtableapp.model.responce.restaurant.TableListResponse;
 import goltsman.bookingtableapp.model.responce.restaurant.TableResponse;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface TableService {
 
     TableResponse create(CreateTableRequest request);
@@ -25,4 +28,6 @@ public interface TableService {
             Boolean isAvailable,
             Pageable pageable
     );
+
+    List<TableResponse> getTablesByRestaurant(Long restaurantId);
 }

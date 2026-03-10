@@ -130,4 +130,14 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .restaurants(restaurants)
                 .build();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RestaurantResponse> getRestaurantsByCuisine(Long cuisineId) {
+        log.info("Получение ресторанов по id кухни {}", cuisineId);
+        List<Restaurant> restaurants = restaurantRepository.findAllByCuisineId(cuisineId);
+        return restaurants.stream()
+                .map(restaurantMapper::mapRestaurantToRestaurantResponse)
+                .toList();
+    }
 }

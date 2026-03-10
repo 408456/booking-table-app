@@ -21,6 +21,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -114,5 +117,17 @@ public class TableServiceImpl implements TableService {
                 .limit(pageable.getPageSize())
                 .tables(tables)
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TableResponse> getTablesByRestaurant(Long restaurantId) {
+        log.info("Получение всех столов ресторана {}", restaurantId);
+        restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new EntityNotFoundException("Ресторан с id " + restaurantId + " не найден"));
+        List<TableEntity> tables = tableRepository.findAllByRestaurantId(restaurantId);
+        return tables.stream()
+                .map(tableMapper::toResponse)
+                .toList();
     }
 }

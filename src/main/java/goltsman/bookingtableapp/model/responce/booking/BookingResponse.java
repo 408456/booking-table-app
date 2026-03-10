@@ -34,8 +34,11 @@ public record BookingResponse(
         @Schema(description = "Количество мест за столом", example = "4")
         Integer tableSeats,
 
-        @Schema(description = "Время бронирования", example = "2025-12-31T19:00:00")
-        LocalDateTime bookingTime,
+        @Schema(description = "Время начала бронирования", example = "2025-12-31T19:00:00")
+        LocalDateTime startTime,
+
+        @Schema(description = "Время конца бронирования", example = "2025-12-31T19:00:00")
+        LocalDateTime endTime,
 
         @Schema(description = "Количество гостей", example = "4")
         Integer guestsCount,

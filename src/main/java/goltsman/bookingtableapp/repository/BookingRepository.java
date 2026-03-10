@@ -10,10 +10,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Booking> {
-
     @Query("SELECT b FROM Booking b WHERE b.table.id = :tableId " +
-            "AND b.bookingTime = :bookingTime " +
-            "AND b.status != 'CANCELLED'")
-    List<Booking> findActiveBookingsByTableAndTime(@Param("tableId") Long tableId,
-                                                   @Param("bookingTime") LocalDateTime bookingTime);
+            "AND b.status != 'CANCELLED' " +
+            "AND ((b.startTime < :endTime AND b.endTime > :startTime))")
+    List<Booking> findConflictingBookings(@Param("tableId") Long tableId,
+                                          @Param("startTime") LocalDateTime startTime,
+                                          @Param("endTime") LocalDateTime endTime);
+
+    List<Booking> findAllByRestaurantId(Long restaurantId);
+    List<Booking> findAllByUserId(Long userId);
 }

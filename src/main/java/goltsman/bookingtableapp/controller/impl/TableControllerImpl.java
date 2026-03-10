@@ -1,7 +1,6 @@
 package goltsman.bookingtableapp.controller.impl;
 
 import goltsman.bookingtableapp.controller.TableController;
-
 import goltsman.bookingtableapp.model.request.restaurant.CreateTableRequest;
 import goltsman.bookingtableapp.model.request.restaurant.UpdateTableRequest;
 import goltsman.bookingtableapp.model.responce.MessageResponse;
@@ -11,14 +10,12 @@ import goltsman.bookingtableapp.service.TableService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -73,5 +70,10 @@ public class TableControllerImpl implements TableController {
                         pageable
                 )
         );
+    }
+
+    @Override
+    public ResponseEntity<List<TableResponse>> getTablesByRestaurant(Long restaurantId) {
+        return ResponseEntity.ok(tableService.getTablesByRestaurant(restaurantId));
     }
 }

@@ -23,16 +23,20 @@ public class CreateBookingRequest {
     @Min(value = 1, message = "ID ресторана должен быть больше 0")
     private Long restaurantId;
 
-    @Schema(description = "ID стола", example = "5")
+    @Schema(description = "ID стола", example = "1")
     @NotNull(message = "ID стола не может быть пустым")
     @Min(value = 1, message = "ID стола должен быть больше 0")
     private Long tableId;
 
-    @Schema(description = "Дата и время бронирования", example = "2025-12-31T19:00:00")
-    @NotNull(message = "Время бронирования не может быть пустым")
-    @Future(message = "Время бронирования должно быть в будущем")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime bookingTime;
+    @Schema(description = "Дата и время начала бронирования", example = "2026-03-19T12:00")
+    @Future(message = "Время начала должно быть в будущем")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime startTime;
+
+    @Schema(description = "Дата и время окончания бронирования", example = "2026-03-19T14:30")
+    @Future(message = "Время окончания должно быть в будущем")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime endTime;
 
     @Schema(description = "Количество гостей", example = "4")
     @NotNull(message = "Количество гостей не может быть пустым")

@@ -26,8 +26,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static goltsman.bookingtableapp.common.ApiConstant.ID;
+import static goltsman.bookingtableapp.common.ApiConstant.RESTAURANT_BY_CUISINE;
 import static goltsman.bookingtableapp.common.ApiConstant.RESTAURANT_CONTROLLER_URL;
 
 
@@ -123,4 +125,17 @@ public interface RestaurantController {
             @Max(value = 100, message = "Размер страницы не должен быть больше 100")
             @RequestParam(defaultValue = "10") Integer pageSize
     );
+
+    @Operation(
+            summary = "Получение ресторанов по id кухни",
+            description = "Возвращает список всех ресторанов, имеющих указанную кухню (без пагинации)",
+            responses = @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RestaurantListResponse.class))))
+    @CommonApiResponses
+    @GetMapping(RESTAURANT_BY_CUISINE)
+    ResponseEntity<List<RestaurantResponse>> getRestaurantsByCuisine(
+            @Min(value = 1, message = "id кухни должен быть больше 0")
+            @PathVariable Long cuisineId);
 }

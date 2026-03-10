@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -74,5 +75,10 @@ public class RestaurantControllerImpl implements RestaurantController {
                         pageable
                 )
         );
+    }
+
+    @Override
+    public ResponseEntity<List<RestaurantResponse>> getRestaurantsByCuisine(Long cuisineId) {
+        return ResponseEntity.ok(restaurantService.getRestaurantsByCuisine(cuisineId));
     }
 }

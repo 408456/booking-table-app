@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -77,5 +78,23 @@ public class BookingControllerImpl implements BookingController {
                 bookingTimeFrom,
                 bookingTimeTo,
                 pageable));
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<BookingResponse>> getBookingsByRestaurant(Long restaurantId) {
+        return ResponseEntity.ok(bookingService.getBookingsByRestaurant(restaurantId));
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<BookingResponse>> getBookingsByUser(Long userId) {
+        return ResponseEntity.ok(bookingService.getBookingsByUser(userId));
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<BookingResponse>> getMyBookings() {
+        return ResponseEntity.ok(bookingService.getMyBookings());
     }
 }

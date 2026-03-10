@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +26,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static goltsman.bookingtableapp.common.ApiConstant.AVAILABLE_TABLES;
 import static goltsman.bookingtableapp.common.ApiConstant.ID;
+import static goltsman.bookingtableapp.common.ApiConstant.RESTAURANT_TABLES;
 import static goltsman.bookingtableapp.common.ApiConstant.TABLE_CONTROLLER_URL;
 
 @Validated
@@ -105,4 +111,17 @@ public interface TableController {
             @Max(value = 100, message = "Размер страницы не должен быть больше 100")
             @RequestParam(defaultValue = "10") Integer pageSize
     );
+
+    @Operation(
+            summary = "Получение всех столиков ресторана",
+            description = "Возвращает список всех столов указанного ресторана",
+            responses = @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = TableListResponse.class))))
+    @CommonApiResponses
+    @GetMapping(RESTAURANT_TABLES)
+    ResponseEntity<List<TableResponse>> getTablesByRestaurant(
+            @Min(value = 1, message = "id ресторана должен быть больше 0")
+            @PathVariable Long restaurantId);
 }

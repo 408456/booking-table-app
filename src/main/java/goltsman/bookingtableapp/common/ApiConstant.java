@@ -13,4 +13,12 @@ public class ApiConstant {
     public static final String BOOKING_CONTROLLER_URL = "/api/v1/booking";
     public static final String AUTH_CONTROLLER_URL = "/auth";
     public static final String USER_CONTROLLER_URL = "/api/v1/users";
+
+    public static final String RESTAURANT_BY_CUISINE = "/cuisine/{cuisineId}";
+    public static final String RESTAURANT_BOOKINGS = "/restaurants/{restaurantId}/bookings";
+    public static final String USER_BOOKINGS = "/user/{userId}";
+    public static final String MY_BOOKINGS = "/users/me/bookings";
+    public static final String RESTAURANT_TABLES = "/restaurants/{restaurantId}/tables";
+    public static final String RESTAURANT_TABLES_AVAILABLE = "/restaurants/{restaurantId}/tables/available";
+    public static final String AVAILABLE_TABLES = "/restaurant/{restaurantId}/available";
 }

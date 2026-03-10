@@ -30,9 +30,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static goltsman.bookingtableapp.common.ApiConstant.BOOKING_CONTROLLER_URL;
 import static goltsman.bookingtableapp.common.ApiConstant.ID;
+import static goltsman.bookingtableapp.common.ApiConstant.MY_BOOKINGS;
+import static goltsman.bookingtableapp.common.ApiConstant.RESTAURANT_BOOKINGS;
+import static goltsman.bookingtableapp.common.ApiConstant.USER_BOOKINGS;
 
 @Validated
 @RequestMapping(BOOKING_CONTROLLER_URL)
@@ -130,4 +134,44 @@ public interface BookingController {
             @Max(value = 100, message = "Размер страницы не должен быть больше 100")
             @RequestParam(defaultValue = "10") Integer pageSize
     );
+
+    @Operation(
+            summary = "Получение всех бронирований ресторана",
+            description = "Возвращает список всех бронирований для указанного ресторана (только для администратора)",
+            responses = @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = BookingListResponse.class)))
+
+    )
+    @CommonApiResponses
+    @GetMapping(RESTAURANT_BOOKINGS)
+    ResponseEntity<List<BookingResponse>> getBookingsByRestaurant(
+            @Min(value = 1, message = "id ресторана должен быть больше 0")
+            @PathVariable Long restaurantId);
+
+    @Operation(
+            summary = "Получение всех бронирований пользователя",
+            description = "Возвращает список всех бронирований указанного пользователя " +
+                    "(доступно админу или самому пользователю)",
+    responses = @ApiResponse(responseCode = "200", description = "OK",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = BookingListResponse.class))))
+    @CommonApiResponses
+    @GetMapping(USER_BOOKINGS)
+    ResponseEntity<List<BookingResponse>> getBookingsByUser(
+            @Min(value = 1, message = "id пользователя должен быть больше 0")
+            @PathVariable Long userId);
+
+    @Operation(
+            summary = "Получение моих бронирований",
+            description = "Возвращает список всех бронирований текущего аутентифицированного пользователя",
+            responses = @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = BookingListResponse.class))))
+    @CommonApiResponses
+    @GetMapping(MY_BOOKINGS)
+    ResponseEntity<List<BookingResponse>> getMyBookings();
 }

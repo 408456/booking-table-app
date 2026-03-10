@@ -22,6 +22,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Getter
 @Setter
@@ -30,6 +31,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "bookings")
 public class Booking {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,8 +48,11 @@ public class Booking {
     @JoinColumn(name = "table_id", nullable = false)
     private TableEntity table;
 
-    @Column(name = "booking_time", nullable = false)
-    private LocalDateTime bookingTime;
+    @Column(name = "start_time", nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(name = "end_time", nullable = false)
+    private LocalDateTime endTime;
 
     @Column(name = "guests_count", nullable = false)
     private Integer guestsCount;

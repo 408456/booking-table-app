@@ -9,6 +9,7 @@ import goltsman.bookingtableapp.model.responce.booking.BookingResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface BookingService {
 
@@ -31,4 +32,8 @@ public interface BookingService {
             LocalDateTime bookingTimeTo,
             Pageable pageable
     );
+
+    List<BookingResponse> getBookingsByRestaurant(Long restaurantId);
+    List<BookingResponse> getBookingsByUser(Long userId);
+    List<BookingResponse> getMyBookings();
 }

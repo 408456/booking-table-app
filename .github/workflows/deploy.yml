@@ -34,8 +34,7 @@ jobs:
       - name: Copy files to server
         run: |
           scp -o StrictHostKeyChecking=no ./booking-app.tar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:~
-          scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:~/booking-table-app/
-
+          scp -o StrictHostKeyChecking=no ./docker-compose.yaml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:~/booking-table-app/
       - name: Deploy on VPS
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} '

@@ -1,6 +1,7 @@
 server:
   port: 9696
 
+
 spring:
   config:
     import: "optional:classpath:.env"

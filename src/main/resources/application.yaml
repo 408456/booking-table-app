@@ -1,22 +1,20 @@
 server:
-  port: 9696
-
+  port: ${SERVER_PORT:9696}
 
 spring:
   config:
     import: "optional:classpath:.env"
   datasource:
-    url: jdbc:postgresql://localhost:5432/booking-service
-    username: postgres
-    password: postgres
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/booking-service}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
   jpa:
     hibernate:
-      ddl-auto: validate
-    show-sql: true
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:validate}
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
     properties:
       hibernate:
-        format_sql=true:
-
+        format_sql: true
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
@@ -29,14 +27,14 @@ springdoc:
     path: /swagger-ui.html
 
 jwt:
-  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-  access-token-expiration-minutes: 60
-  refresh-token-expiration-days: 1
+  secret: ${JWT_SECRET}
+  access-token-expiration-minutes: ${JWT_ACCESS_TOKEN_EXPIRATION_MINUTES:60}
+  refresh-token-expiration-days: ${JWT_REFRESH_TOKEN_EXPIRATION_DAYS:1}
 
 logging:
   level:
-    liquibase: DEBUG
-    org.springframework.jdbc: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.springframework.transaction: DEBUG
+    liquibase: ${LOGGING_LEVEL_LIQUIBASE:INFO}
+    org.springframework.jdbc: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_JDBC:INFO}
+    org.hibernate.SQL: ${LOGGING_LEVEL_ORG_HIBERNATE_SQL:INFO}
+    org.hibernate.orm.jdbc.bind: ${LOGGING_LEVEL_ORG_HIBERNATE_ORM_JDBC_BIND:INFO}
+    org.springframework.transaction: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION:INFO}
